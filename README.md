@@ -5,7 +5,7 @@ Quick reading of university bus departure times.
 
 What I did to prepare my machine for Android development:
 
-- 0: Activated debugg and development mode for my Android device
+- 0: Activated debugger and development mode for my Android device
 - 1: Followed these installation steps: https://facebook.github.io/react-native/docs/getting-started.html
     - 1.1 Building Projects with Native Code
     - 1.2 Linux
@@ -16,7 +16,7 @@ And what I did to run my application on my device (didn't use a virtual device):
 
 - Followed this guide: https://facebook.github.io/react-native/docs/running-on-device.html
 
-> Everytime I'll run my aplication, I execute ```adb reverse tcp:8081 tcp:8081``` and ```react-native run-android``` after plug my device on USB port.
+> Everytime I'll run my aplication, I execute ```adb reverse tcp:8081 tcp:8081``` and ```react-native run-android``` after plugging my device on USB port and allowing it to let my PC debug.
 
 For reference, here's my personal development tools:
 
