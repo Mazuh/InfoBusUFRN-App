@@ -16,7 +16,9 @@ And what I did to run my application on my device (didn't use a virtual device):
 
 - Followed this guide: https://facebook.github.io/react-native/docs/running-on-device.html
 
-> Everytime I'll run my aplication, I execute ```adb reverse tcp:8081 tcp:8081``` and ```react-native run-android``` after plugging my device on USB port and allowing it to let my PC debug.
+> Everytime I'll run my aplication, I execute ```adb reverse tcp:8081 tcp:8081 && react-native run-android```
+> at my repository root after plugging my device on USB port and allowing it to let my PC debug.
+> In another bash instance, I also run ```react-native log-android```.
 
 For reference, here's my personal development tools:
 

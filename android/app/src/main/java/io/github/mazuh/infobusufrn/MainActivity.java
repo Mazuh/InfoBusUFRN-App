@@ -1,4 +1,4 @@
-package com.infobusufrn;
+package io.github.mazuh.infobusufrn;
 
 import com.facebook.react.ReactActivity;
 

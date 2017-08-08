@@ -45,12 +45,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.infobusufrn",
+    package = "io.github.mazuh.infobusufrn",
 )
 
 android_resource(
     name = "res",
-    package = "com.infobusufrn",
+    package = "io.github.mazuh.infobusufrn",
     res = "src/main/res",
 )
 

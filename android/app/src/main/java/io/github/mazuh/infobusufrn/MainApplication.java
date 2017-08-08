@@ -1,4 +1,4 @@
-package com.infobusufrn;
+package io.github.mazuh.infobusufrn;
 
 import android.app.Application;
 
