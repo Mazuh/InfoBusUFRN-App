@@ -1,7 +1,5 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * TODO
  */
 
 import React, { Component } from 'react';
@@ -9,22 +7,99 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 
+const url = 'https://facebook.github.io/react-native/movies.json';
+
 export default class InfoBusUFRN extends Component {
+
+  constructor(){
+    super();
+    this.state = {
+      isLoading: true,
+      error: null,
+      data: null
+    }
+  }
+
+  componentDidMount() {
+
+    fetch(url).then((response) => {
+      return response.json().then((json) =>{
+        this.setState({
+          isLoading: false,
+          error: false,
+          data: json
+        })
+      }).catch((error) => {
+        this.setState({
+          isLoading: false,
+          error: error,
+          data: null
+        })
+      });
+    }).catch((error) => {
+      this.setState({
+        isLoading: false,
+        error: error,
+        data: null
+      });
+    });
+
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Olá, mundo!
-        </Text>
-        <Text style={styles.instructions}>
-          Já comecei editando o arquivo index.android.js.
-          Depois de um quase dois dias preparando o ambiente!
-        </Text>
-      </View>
-    );
+
+    if (this.state.isLoading){
+      return (
+        <View style={styles.container}>
+          <Text style={styles.welcome}>
+            InfoBus UFRN.
+          </Text>
+          <Text style={styles.instructions}>
+            Verificando atualizações...
+          </Text>
+          <ActivityIndicator/>
+        </View>
+      );
+    } else {
+
+      if (this.state.error){
+
+        return (
+          <View style={styles.container}>
+            <Text style={styles.welcome}>
+              Ops...
+            </Text>
+            <Text style={styles.instructions}>
+              Ocorreu um erro: {this.state.error}
+            </Text>
+          </View>
+        );
+
+      } else {
+
+        return (
+          <View style={styles.container}>
+            <Text style={styles.welcome}>
+              Pronto!
+            </Text>
+            <Text style={styles.instructions}>
+              ({this.state.data.description})
+            </Text>
+
+            <Text style={styles.instructions}>
+              O InfoBus UFRN está atualizado.
+            </Text>
+          </View>
+        );
+
+      }
+
+    }
+
   }
 }
 
