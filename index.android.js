@@ -10,9 +10,14 @@ import {
   StyleSheet,
   Text,
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 
+if (!__DEV__) {
+  console.log = () => {};
+  console.error = () => {};
+}
 
 export default class InfoBusUFRN extends Component {
 
@@ -27,6 +32,8 @@ export default class InfoBusUFRN extends Component {
 
   componentDidMount() {
 
+    // exception handlers ---------------------
+
     const updateErrorHandler = (error) => {
       console.error(error);
       this.setState({
@@ -34,19 +41,49 @@ export default class InfoBusUFRN extends Component {
       });
     };
 
-    fetch(DATA_GIST_ENDPOINT).then((response) => {
+    const updateErrorHandlerWithoutStateSet = (error) => {
+      console.error(error);
+    };
+
+    const dataNotFoundErrorHandler = (error) => {
+      console.error('FATAL: ' + error);
+      this.setState({
+        isLoading: false,
+        fatalErrorMessage: 'Não conseguiu encontrar horários do Circular: ' + error
+      });
+    };
+
+    // updating routine ----------------------
+
+    fetch(DATA_GIST_ENDPOINT).then((response) => { // try to download new data and store it
       response.json().then((gist) =>{
+
         const gistContent = JSON.parse(gist.files['infobus_data.json'].content);
 
-        // TODO
+        AsyncStorage.setItem(DATA_STORE_KEY, JSON.stringify(gistContent)).then(async () => {
+          console.log('Stored a new data on ' + DATA_STORE_KEY);
 
-        this.setState({
-          isLoading: false,
-          lastUpdate: undefined
-        })
+        }).catch(updateErrorHandlerWithoutStateSet); // chill... it's OK if
+      }).catch(updateErrorHandlerWithoutStateSet); // you just can't
+    }).catch(updateErrorHandlerWithoutStateSet) // update from internet now
 
-      }).catch(updateErrorHandler);
-    }).catch(updateErrorHandler);
+    .then(() => {
+
+      AsyncStorage.getItem(DATA_STORE_KEY).then(async (loadedGistContent) => {
+        if (loadedGistContent){
+          console.log('Loaded data from ' + DATA_STORE_KEY);
+          this.setState({
+            isLoading: false,
+            data: JSON.parse(loadedGistContent)
+          });
+        } else {
+          console.log('Data not found on ' + DATA_STORE_KEY);
+          dataNotFoundErrorHandler('Conecte-se à Internet pelo menos uma única vez para baixar os horários.');
+        }
+
+      }).catch(dataNotFoundErrorHandler); // but NOT OK if there's NO data at all!
+
+    });
 
   }
 
@@ -54,7 +91,7 @@ export default class InfoBusUFRN extends Component {
 
   render() {
 
-    if (this.state.isLoading)
+    if (this.state.isLoading){
 
       return (
         <View style={styles.container}>
@@ -68,18 +105,37 @@ export default class InfoBusUFRN extends Component {
         </View>
       );
 
-    else
+    } else {
 
-      return (
-        <View style={styles.container}>
-          <Text style={styles.title}>
-            InfoBus UFRN.
-          </Text>
-          <Text style={styles.body}>
-            Pronto.
-          </Text>
-        </View>
-      );
+      if (this.state.fatalErrorMessage){
+        return (
+          <View style={styles.container}>
+            <Text style={styles.title}>
+              InfoBus UFRN.
+            </Text>
+            <Text style={styles.body}>
+              {this.state.fatalErrorMessage}
+            </Text>
+          </View>
+        );
+
+      } else{
+        return (
+          <View style={styles.container}>
+            <Text style={styles.title}>
+              InfoBus UFRN.
+            </Text>
+            <Text style={styles.body}>
+              Pronto.
+            </Text>
+            <Text style={styles.body}>
+              {this.state.data.content.mobileMessage.title}
+            </Text>
+          </View>
+        );
+      }
+
+    }
 
   }
 
@@ -87,6 +143,7 @@ export default class InfoBusUFRN extends Component {
 }
 
 const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
+const DATA_STORE_KEY = '@InfoBusUFRN:data';
 
 const styles = StyleSheet.create({
   container: {
