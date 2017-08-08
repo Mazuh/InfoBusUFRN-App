@@ -13,20 +13,26 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 
 export default class InfoBusUFRN extends Component {
 
   constructor(){
     super();
     this.state = {
-      isLoading: true,
-      error: undefined,
-      data: undefined
+      isLoading: true
     }
   }
 
+
+
   componentDidMount() {
+
+    const updateErrorHandler = (error) => {
+      console.error(error);
+      this.setState({
+        isLoading: false
+      });
+    };
 
     fetch(DATA_GIST_ENDPOINT).then((response) => {
       response.json().then((gist) =>{
@@ -36,79 +42,51 @@ export default class InfoBusUFRN extends Component {
 
         this.setState({
           isLoading: false,
-          error: false,
-          data: "Tudo certo!"
+          lastUpdate: undefined
         })
 
-      }).catch((error) => {
-        this.setState({
-          isLoading: false,
-          error: error,
-          data: null
-        })
-      });
-    }).catch((error) => {
-      this.setState({
-        isLoading: false,
-        error: error,
-        data: null
-      });
-    });
+      }).catch(updateErrorHandler);
+    }).catch(updateErrorHandler);
 
   }
 
+
+
   render() {
 
-    if (this.state.isLoading){
+    if (this.state.isLoading)
+
       return (
         <View style={styles.container}>
-          <Text style={styles.welcome}>
+          <Text style={styles.title}>
             InfoBus UFRN.
           </Text>
-          <Text style={styles.instructions}>
+          <Text style={styles.body}>
             Verificando atualizações...
           </Text>
           <ActivityIndicator/>
         </View>
       );
-    } else {
 
-      if (this.state.error){
+    else
 
-        return (
-          <View style={styles.container}>
-            <Text style={styles.welcome}>
-              Ops...
-            </Text>
-            <Text style={styles.instructions}>
-              Ocorreu um erro: {this.state.error}
-            </Text>
-          </View>
-        );
-
-      } else {
-
-        return (
-          <View style={styles.container}>
-            <Text style={styles.welcome}>
-              Pronto!
-            </Text>
-            <Text style={styles.instructions}>
-              ({this.state.data})
-            </Text>
-
-            <Text style={styles.instructions}>
-              O InfoBus UFRN está atualizado.
-            </Text>
-          </View>
-        );
-
-      }
-
-    }
+      return (
+        <View style={styles.container}>
+          <Text style={styles.title}>
+            InfoBus UFRN.
+          </Text>
+          <Text style={styles.body}>
+            Pronto.
+          </Text>
+        </View>
+      );
 
   }
+
+
 }
+
+const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 
 const styles = StyleSheet.create({
   container: {
@@ -117,12 +95,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
+  title: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
   },
-  instructions: {
+  body: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
