@@ -55,12 +55,12 @@ export default class InfoBusUFRN extends Component {
 
     // updating routine ----------------------
 
-    fetch(DATA_GIST_ENDPOINT).then((response) => { // try to download new data and store it
-      response.json().then((gist) =>{
+    fetch(DATA_GIST_ENDPOINT).then((httpResponse) => { // try to download new data and store it
+      httpResponse.json().then((gistResponse) =>{
 
-        const gistContent = JSON.parse(gist.files['infobus_data.json'].content);
+        const gistData = JSON.parse(gistResponse.files['infobus_data.json'].content);
 
-        AsyncStorage.setItem(DATA_STORE_KEY, JSON.stringify(gistContent)).then(async () => {
+        AsyncStorage.setItem(DATA_STORE_KEY, JSON.stringify(gistData)).then(async () => {
           console.log('Stored a new data on ' + DATA_STORE_KEY);
 
         }).catch(updateErrorHandlerWithoutStateSet); // chill... it's OK if
@@ -69,15 +69,27 @@ export default class InfoBusUFRN extends Component {
 
     .then(() => {
 
-      AsyncStorage.getItem(DATA_STORE_KEY).then(async (loadedGistContent) => {
-        if (loadedGistContent){
+      AsyncStorage.getItem(DATA_STORE_KEY).then(async (gistData) => {
+        if (gistData){
           console.log('Loaded data from ' + DATA_STORE_KEY);
+
           this.setState({
             isLoading: false,
-            data: JSON.parse(loadedGistContent)
+            data: JSON.parse(gistData)
           });
+
+          let needsToUpdateFromAppStore = true;
+          this.state.data.meta.supportedMobileVersions.forEach((supportedVersion) => {
+            if (THIS_APP_VERSION == supportedVersion){
+              needsToUpdateFromAppStore = false;
+            }
+          });
+          if (needsToUpdateFromAppStore){
+            // TODO: give hyperlink for the damn user who can't (and won't) ask for it!
+            dataNotFoundErrorHandler('A versão do seu app do InfoBus UFRN é muuuito antiga. Atualize na Google Play!');
+          }
         } else {
-          console.log('Data not found on ' + DATA_STORE_KEY);
+          console.error('Data not found on ' + DATA_STORE_KEY);
           dataNotFoundErrorHandler('Conecte-se à Internet pelo menos uma única vez para baixar os horários.');
         }
 
@@ -144,6 +156,7 @@ export default class InfoBusUFRN extends Component {
 
 const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 const DATA_STORE_KEY = '@InfoBusUFRN:data';
+const THIS_APP_VERSION = '2.0.0';
 
 const styles = StyleSheet.create({
   container: {
