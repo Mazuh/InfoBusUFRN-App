@@ -1,5 +1,7 @@
 /**
- * TODO
+ * Initial screen, hosting the application main menu where the user selects
+ * a bus endpoint.
+ * @see https://github.com/Mazuh/InfoBusUFRN-App
  */
 
 import React, { Component } from 'react';
@@ -11,7 +13,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-const url = 'https://facebook.github.io/react-native/movies.json';
+const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 
 export default class InfoBusUFRN extends Component {
 
@@ -19,20 +21,25 @@ export default class InfoBusUFRN extends Component {
     super();
     this.state = {
       isLoading: true,
-      error: null,
-      data: null
+      error: undefined,
+      data: undefined
     }
   }
 
   componentDidMount() {
 
-    fetch(url).then((response) => {
-      return response.json().then((json) =>{
+    fetch(DATA_GIST_ENDPOINT).then((response) => {
+      response.json().then((gist) =>{
+        const gistContent = JSON.parse(gist.files['infobus_data.json'].content);
+
+        // TODO
+
         this.setState({
           isLoading: false,
           error: false,
-          data: json
+          data: "Tudo certo!"
         })
+
       }).catch((error) => {
         this.setState({
           isLoading: false,
@@ -87,7 +94,7 @@ export default class InfoBusUFRN extends Component {
               Pronto!
             </Text>
             <Text style={styles.instructions}>
-              ({this.state.data.description})
+              ({this.state.data})
             </Text>
 
             <Text style={styles.instructions}>
