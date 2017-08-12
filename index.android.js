@@ -1,6 +1,4 @@
 /**
- * Initial screen, hosting the application main menu where the user selects
- * a bus endpoint.
  * @see https://github.com/Mazuh/InfoBusUFRN-App
  */
 
@@ -8,7 +6,8 @@ import React, { Component, } from 'react';
 import {
   View,
   Text,
-  Button,
+  TouchableHighlight,
+  FlatList,
   AppRegistry,
   StyleSheet,
   ActivityIndicator,
@@ -141,20 +140,32 @@ export class EndpointSelection extends Component {
         );
 
       } else{
+
+        let endpoints = [];
+        this.state.data.content.busEndpoints.forEach((busEndpoint) => {
+          endpoints.push({'key': busEndpoint.reference});
+        });
+
         return (
           <View style={styles.container}>
             <Text style={styles.title}>
-              Pronto!
+              Qual a parada?
             </Text>
-            <Text style={styles.body}>
-              Aqui deverá ser selecionado o terminal.
-            </Text>
-            <Text style={styles.body}>
-              {this.state.data.content.mobileMessage.title}
-            </Text>
-            <Button title="Próxima tela!" onPress={() => navigate('EndpointSchedules')} />
+            <FlatList
+              data={endpoints}
+              renderItem={({item}) =>
+                <TouchableHighlight
+                  style={styles.libtncontainer}
+                  onPress={() => {navigate('EndpointSchedules')}}>
+                  <Text style={styles.libtntext}>{item.key}</Text>
+                </TouchableHighlight>
+              }
+              ItemSeparatorComponent={() =>
+                <Text style={styles.liseparator}></Text>
+              } />
           </View>
         );
+
       }
 
     }
@@ -204,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   title: {
-    fontSize: 20,
+    fontSize: 40,
     textAlign: 'center',
     margin: 10,
   },
@@ -212,6 +223,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  list: {
+  },
+  libtncontainer: {
+    backgroundColor: 'black',
+  },
+  libtntext: {
+    color: 'white',
+    fontSize: 45,
+    margin: 30,
+  },
+  liseparator: {
+    margin: 5,
   },
 });
 
