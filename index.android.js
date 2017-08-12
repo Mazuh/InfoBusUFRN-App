@@ -4,25 +4,34 @@
  * @see https://github.com/Mazuh/InfoBusUFRN-App
  */
 
-import React, { Component } from 'react';
+import React, { Component, } from 'react';
 import {
+  View,
+  Text,
+  Button,
   AppRegistry,
   StyleSheet,
-  Text,
-  View,
   ActivityIndicator,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
+import { StackNavigator, } from 'react-navigation';
+
 
 if (!__DEV__) {
   console.log = () => {};
   console.error = () => {};
 }
 
-export default class InfoBusUFRN extends Component {
 
-  constructor(){
-    super();
+export class EndpointSelection extends Component {
+
+  static navigationOptions = ({ navigation }) => ({
+    title: 'InfoBus UFRN'
+  });
+
+
+  constructor(props){
+    super(props);
     this.state = {
       isLoading: true
     }
@@ -32,7 +41,7 @@ export default class InfoBusUFRN extends Component {
 
   componentDidMount() {
 
-    // exception handlers ---------------------
+    // exception handlers
 
     const updateErrorHandler = (error) => {
       console.error(error);
@@ -53,7 +62,7 @@ export default class InfoBusUFRN extends Component {
       });
     };
 
-    // updating routine ----------------------
+    // updating routine
 
     fetch(DATA_GIST_ENDPOINT).then((httpResponse) => { // try to download new data and store it
       httpResponse.json().then((gistResponse) =>{
@@ -66,7 +75,6 @@ export default class InfoBusUFRN extends Component {
         }).catch(updateErrorHandlerWithoutStateSet); // chill... it's OK if
       }).catch(updateErrorHandlerWithoutStateSet); // you just can't
     }).catch(updateErrorHandlerWithoutStateSet) // update from internet now
-
     .then(() => {
 
       AsyncStorage.getItem(DATA_STORE_KEY).then(async (gistData) => {
@@ -93,7 +101,7 @@ export default class InfoBusUFRN extends Component {
           dataNotFoundErrorHandler('Conecte-se à Internet pelo menos uma única vez para baixar os horários.');
         }
 
-      }).catch(dataNotFoundErrorHandler); // but NOT OK if there's NO data at all!
+      }).catch(dataNotFoundErrorHandler); // NOT OK if there's NO data at all!
 
     });
 
@@ -102,6 +110,7 @@ export default class InfoBusUFRN extends Component {
 
 
   render() {
+    const { navigate } = this.props.navigation;
 
     if (this.state.isLoading){
 
@@ -123,7 +132,7 @@ export default class InfoBusUFRN extends Component {
         return (
           <View style={styles.container}>
             <Text style={styles.title}>
-              InfoBus UFRN.
+              Opa. Que vergonha! =(
             </Text>
             <Text style={styles.body}>
               {this.state.fatalErrorMessage}
@@ -135,14 +144,15 @@ export default class InfoBusUFRN extends Component {
         return (
           <View style={styles.container}>
             <Text style={styles.title}>
-              InfoBus UFRN.
+              Pronto!
             </Text>
             <Text style={styles.body}>
-              Pronto.
+              Aqui deverá ser selecionado o terminal.
             </Text>
             <Text style={styles.body}>
               {this.state.data.content.mobileMessage.title}
             </Text>
+            <Button title="Próxima tela!" onPress={() => navigate('EndpointSchedules')} />
           </View>
         );
       }
@@ -154,9 +164,37 @@ export default class InfoBusUFRN extends Component {
 
 }
 
+
+
+export class EndpointSchedules extends Component {
+
+  static navigationOptions = ({ navigation }) => ({
+    title: 'InfoBus UFRN'
+  });
+
+  render(){
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>
+          Olá, mundo!
+        </Text>
+        <Text style={styles.body}>
+          Aqui serão listados os horários do terminal selecionado.
+        </Text>
+      </View>
+    );
+  }
+}
+
+
 const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 const DATA_STORE_KEY = '@InfoBusUFRN:data';
 const THIS_APP_VERSION = '2.0.0';
+
+const InfoBusUFRN = StackNavigator({
+  EndpointSelection: { screen: EndpointSelection },
+  EndpointSchedules: { screen: EndpointSchedules }
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -177,4 +215,5 @@ const styles = StyleSheet.create({
   },
 });
 
+export default InfoBusUFRN;
 AppRegistry.registerComponent('InfoBusUFRN', () => InfoBusUFRN);
