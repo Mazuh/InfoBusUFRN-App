@@ -5,6 +5,7 @@
 import React, { Component, } from 'react';
 import {
   View,
+  ScrollView,
   Text,
   Image,
   TouchableHighlight,
@@ -27,7 +28,12 @@ if (!__DEV__) {
 export class EndpointSelection extends Component {
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'InfoBus UFRN'
+    title: 'InfoBus UFRN',
+    headerRight: (
+      <TouchableHighlight onPress={() => navigation.navigate('About')}>
+        <Image style={styles.headerRight} source={require('./github_icon.png')}/>
+      </TouchableHighlight>
+    ),
   });
 
 
@@ -210,7 +216,12 @@ export class EndpointSelection extends Component {
 export class EndpointSchedules extends Component {
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'InfoBus UFRN: Horários'
+    title: 'InfoBus UFRN: Horários',
+    headerRight: (
+      <TouchableHighlight onPress={() => navigation.navigate('About')}>
+        <Image style={styles.headerRight} source={require('./github_icon.png')}/>
+      </TouchableHighlight>
+    ),
   });
 
 
@@ -347,13 +358,61 @@ export class EndpointSchedules extends Component {
 }
 
 
+export class About extends Component {
+
+  static navigationOptions = ({ navigation }) => ({
+    title: 'InfoBus UFRN: Sobre'
+  });
+
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    return (
+      <View style={styles.container}>
+        <Image source={require('./infobus_icon.png')}/>
+        <Text style={styles.titlecolored}>
+          InfoBus UFRN
+        </Text>
+        <ScrollView>
+          <Text style={styles.subtitlecolored}>
+            Copyright (c) 2017 "Mazuh" &lt;mazuh@ufrn.edu.br&gt;
+          </Text>
+          <Text style={styles.subtitle}>
+            Fácil consulta aos horários de partida dos ônibus da UFRN.
+          </Text>
+          <Text style={styles.body}>
+            Este programa é um Software Livre: você pode redistribuí-lo e/ou modificá-lo
+             sob os termos da GNU General Public License v3, conforme publicado pela
+             Free Software Foundation.
+          </Text>
+          <Text style={styles.body}>
+            Você pode consultar a cópia da GNU General Public License v3
+             em &lt;http://www.gnu.org/licenses/&gt;. E abrir o código-fonte no
+             repositório do GitHub: &lt;https://github.com/Mazuh/InfoBusUFRN-App/&gt;.
+          </Text>
+          <Text style={styles.body}>
+            Agradecimentos: Davi Carvalho (UFRN), Yuri Henrique Sales (IFRN),
+             e a todos que contribuiram com feedbacks e pedidos ao antigo
+             app Terminal 588.
+          </Text>
+        </ScrollView>
+      </View>
+    );
+  }
+}
+
+
+
 const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 const DATA_STORE_KEY = '@InfoBusUFRN:data';
 const THIS_APP_VERSION = '2.0.0';
 
 const InfoBusUFRN = StackNavigator({
   EndpointSelection: { screen: EndpointSelection },
-  EndpointSchedules: { screen: EndpointSchedules }
+  EndpointSchedules: { screen: EndpointSchedules },
+  About: { screen: About },
 });
 
 const styles = StyleSheet.create({
@@ -392,8 +451,11 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  headerRight: {
+    marginRight: 3,
+  },
   listcontainer: {
-    height: 200,
+    height: 178,
     //backgroundColor: 'black',
   },
   list: {
