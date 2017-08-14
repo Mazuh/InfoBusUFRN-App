@@ -40,6 +40,22 @@ For reference, here's my personal development tools:
     - react-native-cli: 2.0.1
     - node: 6.11.2
 
+## Some contributors
+A few people contributed somehow to this project:
+
+- Yuri H. Sales ([@yuriscosta](https://github.com/yuriscosta)) for helping to assemble data and suggesting the 'InfoBus' name
+- Davi Carvalho ([@davicfg](https://github.com/davicfg)) for giving me the data source
+- Robson Costa (from e-mail) for giving me another data source
+
+Other people gave me ideas and feedback for upgrades since Terminal 588:
+
+- Amanda Cilene ([@amandaacilene](https://github.com/amandaacilene)) about statistic use of available data
+- Breno Pascoal (from Google Play) about statistic use of available data
+- Edivânia Pontes (from Google Play) about notifications and user preferences
+- Rayne Araújo (from Google Play) about listing the full schedule instead of just nearby times
+
+And a lot more who asked me (from Facebook, e-mail and Google Play) to recreate this app and praised the previous one.
+
 ## License
 
     InfoBus UFRN
