@@ -1,11 +1,16 @@
 # InfoBus UFRN
 Quick reading of my university (UFRN) bus departure times.
 
+Available on Google Play: https://play.google.com/store/apps/details?id=io.github.mazuh.infobusufrn
+
 > Open data source: https://gist.github.com/Mazuh/e10c07f1abb580c143557d8ed8427bbd (contribute!)
 
-> Available on Google Play: https://play.google.com/store/apps/details?id=io.github.mazuh.infobusufrn
+## Understanding the code
 
-## Setting up development environment
+There isn't much to see right now. Just read [index.android.js](./index.android.js) file. Soon there will be a better
+documentation on Wiki page!
+
+## Setting up my development environment
 
 What I did to prepare my machine for Android development:
 
@@ -19,6 +24,9 @@ What I did to prepare my machine for Android development:
 And what I did to run my application on my device (didn't use a virtual device):
 
 - Followed this guide: https://facebook.github.io/react-native/docs/running-on-device.html
+
+What I imagine that should be done after you clone the repository (didn't test it yet):
+- Execute ```npm install``` on repository directory.
 
 > Everytime I'll run my aplication, I execute ```adb reverse tcp:8081 tcp:8081 && react-native run-android```
 > at my repository root after plugging my device on USB port and allowing it to let my PC debug.
