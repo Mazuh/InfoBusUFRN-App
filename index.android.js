@@ -110,7 +110,6 @@ export class EndpointSelection extends Component {
 
 
   render() {
-    const { navigate } = this.props.navigation;
 
     if (this.state.isLoading){
 
@@ -133,7 +132,7 @@ export class EndpointSelection extends Component {
         return (
           <View style={styles.container}>
             <Text style={styles.title}>
-              Opa. Que vergonha! =(
+              Inge, boy... Que vergonha! =(
             </Text>
             <Text style={styles.body}>
               {this.state.fatalErrorMessage}
@@ -143,8 +142,10 @@ export class EndpointSelection extends Component {
 
       } else{
 
+        const busEndpoints = this.state.data.content.busEndpoints;
+
         let endpoints = [];
-        this.state.data.content.busEndpoints.forEach((busEndpoint) => {
+        busEndpoints.forEach((busEndpoint) => {
           endpoints.push({'key': busEndpoint.reference});
         });
 
@@ -160,7 +161,15 @@ export class EndpointSelection extends Component {
                 renderItem={({item}) =>
                   <TouchableHighlight
                     style={styles.libtncontainer}
-                    onPress={() => {navigate('EndpointSchedules')}}>
+                    onPress={() => {
+                      this.props.navigation.navigate(
+                        'EndpointSchedules',
+                        {
+                          selectedReference: item.key,
+                          busEndpoints: busEndpoints,
+                        }
+                      )
+                    }}>
                     <Text style={styles.libtntext}>{item.key}</Text>
                   </TouchableHighlight>
                 }
@@ -188,14 +197,63 @@ export class EndpointSchedules extends Component {
     title: 'InfoBus UFRN'
   });
 
+
+  // find the last bus to departure, the next and the one after it
+  // requires departure times to be a list of objects in {'time': 'HH:MM'} format
+  // implements binary search
+  findNearbyDepartures(currHour, currMin, departuresList){
+
+  }
+
+
+  constructor(props){
+    super(props);
+
+    const selectedReference = this.props.navigation.state.params.selectedReference;
+    const busEndpoints = this.props.navigation.state.params.busEndpoints;
+
+    busEndpoints.forEach((busEndpoint) => {
+      if (busEndpoint.reference == selectedReference){
+        // current time
+        const dtNow = new Date();
+        let now = {
+          hours: dtNow.getUTCHours(),
+          minutes: dtNow.getUTCMinutes(),
+        };
+
+        // set a constant time zone for current time
+        now.hours -= 3;
+        if (now.hours < 0){
+          now.hours = 24 + now.hours;
+        }
+
+        // stringify current time
+        const localDateStr = (now.hours < 10 ? '0'+now.hours : now.hours)
+                           + ':'
+                           + (now.minutes < 10 ? '0'+now.minutes : now.minutes);
+
+        // find departure times suggestions
+        this.findNearbyDepartures(now.hours, now.minutes, busEndpoint.bus[0].departure);
+
+        this.state = {
+          selectedReference: selectedReference,
+          localDate: localDateStr,
+        };
+      }
+    });
+
+
+  }
+
+
   render(){
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-          Olá, mundo!
+          {this.state.selectedReference}
         </Text>
         <Text style={styles.body}>
-          Aqui serão listados os horários do terminal selecionado.
+          {this.state.localDate}
         </Text>
       </View>
     );
