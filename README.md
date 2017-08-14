@@ -1,7 +1,9 @@
 # InfoBus UFRN
-Quick reading of university bus departure times.
+Quick reading of my university (UFRN) bus departure times.
 
 > Open data source: https://gist.github.com/Mazuh/e10c07f1abb580c143557d8ed8427bbd (contribute!)
+
+> Available on Google Play: https://play.google.com/store/apps/details?id=io.github.mazuh.infobusufrn
 
 ## Setting up development environment
 
