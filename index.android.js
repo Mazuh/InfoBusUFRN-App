@@ -13,6 +13,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   AsyncStorage,
+  ToastAndroid,
 } from 'react-native';
 import { StackNavigator, } from 'react-navigation';
 
@@ -219,9 +220,6 @@ export class EndpointSchedules extends Component {
           now.hours = 24 + now.hours;
         }
 
-        //now.hours = 23; // manual testing, so primitive
-        //now.minutes = 50;
-
         // stringify current time
         const nowStr = (now.hours < 10 ? '0'+now.hours : now.hours)
                      + ':'
@@ -267,7 +265,29 @@ export class EndpointSchedules extends Component {
     if (this.state.hasHiddenBusSuggestions){
       hiddenBusMsg = 'Alguns ônibus foram ocultos da lista por não terem mais horário agendados hoje.';
       hiddenBusMsg += ' Isso ocorre em fins de noite, períodos de férias e alguns feriados.';
+    } else{
+      if (Math.floor(Math.random() * 10) < 4){ // 40% of chance to show this tip
+        hiddenBusMsg = '(Dica: meta uma dedada num horário pra ver quanto tempo falta.)';
+      }
     }
+
+    const showTimeDiff = (time) => {
+      const dtNow = new Date();
+      const nowMinutes = dtNow.getUTCHours()*60 + dtNow.getUTCMinutes() - 180;
+      if (nowMinutes < 0){
+        ToastAndroid.show('Foi mal, tá muito cedo pra calcular isso ainda...', ToastAndroid.SHORT);
+      } else{
+        const timeMinutes = Number(time.substring(0, 2))*60 + Number(time.substring(3, 5));
+        const diff = timeMinutes - nowMinutes;
+        if (diff > 1){
+          ToastAndroid.show('Faltam ' + diff + ' minutos pra dar ' + time + '.', ToastAndroid.SHORT);
+        } else if (diff > -1){
+          ToastAndroid.show('Se o de ' + time + ' não tá saindo agora, então já foi embora ou se atrasou.', ToastAndroid.SHORT);
+        } else{
+          ToastAndroid.show('O de ' + time + ' deve(ria) ter saído há ' + diff + ' minutos.', ToastAndroid.SHORT);
+        }
+      }
+    };
 
     return (
       <View style={styles.container}>
@@ -275,19 +295,27 @@ export class EndpointSchedules extends Component {
           {this.state.selectedReference}
         </Text>
         <Text style={styles.body}>
-          Agora:
-        </Text>
-        <Text style={styles.body}>
-          {this.state.localTime}
+          Deu pra arranjar {this.state.suggestions.length} linha(s) às {this.state.localTime}h.
         </Text>
         <FlatList
           data={this.state.suggestions}
           renderItem={({item}) =>
             <View>
-              <Text style={styles.subtitlecolored}>{item.key}</Text>
-              <Text style={styles.subtitle}>{item.last}</Text>
-              <Text style={styles.title}>{item.next1}</Text>
-              <Text style={styles.subtitle}>{item.next2}</Text>
+              <Text style={styles.subtitlecolored}>
+                {item.key}
+              </Text>
+              <Text style={styles.subtitle}
+                onPress={() => showTimeDiff(item.last)}>
+                {item.last}
+              </Text>
+              <Text style={styles.title}
+                onPress={() => showTimeDiff(item.next1)}>
+                {item.next1}
+              </Text>
+              <Text style={styles.subtitle}
+                onPress={() => showTimeDiff(item.next2)}>
+                {item.next2}
+              </Text>
             </View>
           }
           ItemSeparatorComponent={() =>
@@ -320,7 +348,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 27,
     textAlign: 'center',
-    margin: 10,
+    margin: 8,
     fontWeight: 'bold',
   },
   subtitle: {
@@ -331,7 +359,7 @@ const styles = StyleSheet.create({
   titlecolored: {
     fontSize: 27,
     textAlign: 'center',
-    margin: 10,
+    margin: 8,
     color: '#3F51B5',
     fontWeight: 'bold',
   },
