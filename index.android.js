@@ -194,16 +194,8 @@ export class EndpointSelection extends Component {
 export class EndpointSchedules extends Component {
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'InfoBus UFRN'
+    title: 'InfoBus UFRN: Horários'
   });
-
-
-  // find the last bus to departure, the next and the one after it
-  // requires departure times to be a list of objects in {'time': 'HH:MM'} format
-  // implements binary search
-  findNearbyDepartures(currHour, currMin, departuresList){
-
-  }
 
 
   constructor(props){
@@ -214,7 +206,7 @@ export class EndpointSchedules extends Component {
 
     busEndpoints.forEach((busEndpoint) => {
       if (busEndpoint.reference == selectedReference){
-        // current time
+        // current UTC time
         const dtNow = new Date();
         let now = {
           hours: dtNow.getUTCHours(),
@@ -222,22 +214,42 @@ export class EndpointSchedules extends Component {
         };
 
         // set a constant time zone for current time
-        now.hours -= 3;
+        now.hours -= 3; // RN-Brazil
         if (now.hours < 0){
           now.hours = 24 + now.hours;
         }
 
+        //now.hours = 23; // manual testing
+        //now.minutes = 50;
+
         // stringify current time
-        const localDateStr = (now.hours < 10 ? '0'+now.hours : now.hours)
-                           + ':'
-                           + (now.minutes < 10 ? '0'+now.minutes : now.minutes);
+        const nowStr = (now.hours < 10 ? '0'+now.hours : now.hours)
+                     + ':'
+                     + (now.minutes < 10 ? '0'+now.minutes : now.minutes);
 
         // find departure times suggestions
-        this.findNearbyDepartures(now.hours, now.minutes, busEndpoint.bus[0].departure);
+        let suggestion = {
+          last: undefined,
+          next1: undefined,
+          next2: undefined,
+        };
+        busEndpoint.bus[0].departures.some((departure, i, departures) => {
+          let h = departure.time.substring(0, 2);
+          let m = departure.time.substring(3, 5);
+          if ((h > now.hours) || (h == now.hours && m >= now.minutes)){
+            suggestion.last = !i ? null : departures[i-1].time;
+            suggestion.next1 = departure.time;
+            suggestion.next2 = i == departures.length-1 ? null : departures[i+1].time;
+            return true;
+          } else{
+            return false;
+          }
+        });
 
         this.state = {
           selectedReference: selectedReference,
-          localDate: localDateStr,
+          localTime: nowStr,
+          suggestion: suggestion,
         };
       }
     });
@@ -253,7 +265,13 @@ export class EndpointSchedules extends Component {
           {this.state.selectedReference}
         </Text>
         <Text style={styles.body}>
-          {this.state.localDate}
+          Agora: {this.state.localTime}
+        </Text>
+        <Text style={styles.body}>
+          Anterior: {this.state.suggestion.last}
+        </Text>
+        <Text style={styles.body}>
+          Próximos: {this.state.suggestion.next1} e {this.state.suggestion.next2}
         </Text>
       </View>
     );
