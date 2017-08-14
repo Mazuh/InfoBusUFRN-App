@@ -299,8 +299,8 @@ export class EndpointSchedules extends Component {
         const diff = timeMinutes - nowMinutes;
         if (diff > 1){
           ToastAndroid.show('Faltam ' + diff + ' minutos pra dar ' + time + '.', ToastAndroid.SHORT);
-        } else if (diff > -1){
-          ToastAndroid.show('Esse de ' + time + ' já está saindo neste instante ou já foi embora (ou se atrasou).', ToastAndroid.SHORT);
+        } else if (diff >= -1){
+          ToastAndroid.show('Esse de ' + time + ' deve(ria) estar saindo AGORA ou já se foi.', ToastAndroid.SHORT);
         } else{
           ToastAndroid.show('Esse de ' + time + ' deve(ria) ter saído há ' + Math.abs(diff) + ' minutos.', ToastAndroid.SHORT);
         }
