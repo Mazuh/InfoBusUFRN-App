@@ -224,7 +224,7 @@ export class EndpointSchedules extends Component {
       if (busEndpoint.reference == selectedReference){
         // current UTC time
         const dtNow = new Date();
-        const today = dtNow.getUTCDay();
+        const today = dtNow.getDay();
         let now = {
           hours: dtNow.getUTCHours(),
           minutes: dtNow.getUTCMinutes(),
