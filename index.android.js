@@ -6,6 +6,7 @@ import React, { Component, } from 'react';
 import {
   View,
   Text,
+  Image,
   TouchableHighlight,
   FlatList,
   AppRegistry,
@@ -115,8 +116,9 @@ export class EndpointSelection extends Component {
 
       return (
         <View style={styles.container}>
+          <Image source={require('./infobus_icon.png')}/>
           <Text style={styles.title}>
-            InfoBus UFRN.
+            Dirrocha?
           </Text>
           <Text style={styles.body}>
             Verificando atualizações...
@@ -149,20 +151,23 @@ export class EndpointSelection extends Component {
         return (
           <View style={styles.container}>
             <Text style={styles.title}>
-              Qual a parada?
+              Cadê tu?
             </Text>
-            <FlatList
-              data={endpoints}
-              renderItem={({item}) =>
-                <TouchableHighlight
-                  style={styles.libtncontainer}
-                  onPress={() => {navigate('EndpointSchedules')}}>
-                  <Text style={styles.libtntext}>{item.key}</Text>
-                </TouchableHighlight>
-              }
-              ItemSeparatorComponent={() =>
-                <Text style={styles.liseparator}></Text>
-              } />
+            <View style={styles.listcontainer}>
+              <FlatList
+                style={styles.list}
+                data={endpoints}
+                renderItem={({item}) =>
+                  <TouchableHighlight
+                    style={styles.libtncontainer}
+                    onPress={() => {navigate('EndpointSchedules')}}>
+                    <Text style={styles.libtntext}>{item.key}</Text>
+                  </TouchableHighlight>
+                }
+                ItemSeparatorComponent={() =>
+                  <Text style={styles.liseparator}></Text>
+                } />
+            </View>
           </View>
         );
 
@@ -215,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   title: {
-    fontSize: 40,
+    fontSize: 25,
     textAlign: 'center',
     margin: 10,
   },
@@ -224,15 +229,19 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  listcontainer: {
+    height: 200,
+    //backgroundColor: 'black',
+  },
   list: {
   },
   libtncontainer: {
-    backgroundColor: 'black',
+    backgroundColor: '#3F51B5',
   },
   libtntext: {
     color: 'white',
-    fontSize: 45,
-    margin: 30,
+    fontSize: 23,
+    margin: 10,
   },
   liseparator: {
     margin: 5,
