@@ -219,7 +219,7 @@ export class EndpointSchedules extends Component {
           now.hours = 24 + now.hours;
         }
 
-        //now.hours = 23; // manual testing
+        //now.hours = 23; // manual testing, so primitive
         //now.minutes = 50;
 
         // stringify current time
@@ -228,28 +228,32 @@ export class EndpointSchedules extends Component {
                      + (now.minutes < 10 ? '0'+now.minutes : now.minutes);
 
         // find departure times suggestions
-        let suggestion = {
-          last: undefined,
-          next1: undefined,
-          next2: undefined,
-        };
-        busEndpoint.bus[0].departures.some((departure, i, departures) => {
-          let h = departure.time.substring(0, 2);
-          let m = departure.time.substring(3, 5);
-          if ((h > now.hours) || (h == now.hours && m >= now.minutes)){
-            suggestion.last = !i ? null : departures[i-1].time;
-            suggestion.next1 = departure.time;
-            suggestion.next2 = i == departures.length-1 ? null : departures[i+1].time;
-            return true;
-          } else{
-            return false;
-          }
+        let suggestions = [];
+        busEndpoint.buses.forEach((bus) => {
+          bus.departures.some((departure, i, departures) => {
+            let h = departure.time.substring(0, 2);
+            let m = departure.time.substring(3, 5);
+            if ((h > now.hours) || (h == now.hours && m >= now.minutes)){
+              suggestions.push({
+                key: bus.line,
+                last: !i ? null : departures[i-1].time,
+                next1: departure.time,
+                next2: i == departures.length-1 ? null : departures[i+1].time,
+              });
+              return true;
+            } else{
+              return false;
+            }
+          });
         });
+
+        const hasHiddenBusSuggestions = busEndpoint.buses.length != suggestions.length;
 
         this.state = {
           selectedReference: selectedReference,
           localTime: nowStr,
-          suggestion: suggestion,
+          suggestions: suggestions,
+          hasHiddenBusSuggestions: hasHiddenBusSuggestions,
         };
       }
     });
@@ -259,20 +263,38 @@ export class EndpointSchedules extends Component {
 
 
   render(){
+    let hiddenBusMsg = '';
+    if (this.state.hasHiddenBusSuggestions){
+      hiddenBusMsg = 'Alguns ônibus foram ocultos da lista por não terem mais horário agendados hoje.';
+      hiddenBusMsg += ' Isso ocorre em fins de noite, períodos de férias e alguns feriados.';
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
+        <Text style={styles.titlecolored}>
           {this.state.selectedReference}
         </Text>
         <Text style={styles.body}>
-          Agora: {this.state.localTime}
+          Agora:
         </Text>
         <Text style={styles.body}>
-          Anterior: {this.state.suggestion.last}
+          {this.state.localTime}
         </Text>
-        <Text style={styles.body}>
-          Próximos: {this.state.suggestion.next1} e {this.state.suggestion.next2}
-        </Text>
+        <FlatList
+          data={this.state.suggestions}
+          renderItem={({item}) =>
+            <View>
+              <Text style={styles.subtitlecolored}>{item.key}</Text>
+              <Text style={styles.subtitle}>{item.last}</Text>
+              <Text style={styles.title}>{item.next1}</Text>
+              <Text style={styles.subtitle}>{item.next2}</Text>
+            </View>
+          }
+          ItemSeparatorComponent={() =>
+            <Text style={styles.liseparator}></Text>
+          }
+        />
+        <Text style={styles.body}>{hiddenBusMsg}</Text>
       </View>
     );
   }
@@ -296,9 +318,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   title: {
-    fontSize: 25,
+    fontSize: 27,
     textAlign: 'center',
     margin: 10,
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 25,
+    textAlign: 'center',
+    margin: 0,
+  },
+  titlecolored: {
+    fontSize: 27,
+    textAlign: 'center',
+    margin: 10,
+    color: '#3F51B5',
+    fontWeight: 'bold',
+  },
+  subtitlecolored: {
+    fontSize: 25,
+    textAlign: 'center',
+    margin: 0,
+    color: '#3F51B5',
   },
   body: {
     textAlign: 'center',
