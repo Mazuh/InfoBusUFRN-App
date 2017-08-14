@@ -150,6 +150,19 @@ export class EndpointSelection extends Component {
           endpoints.push({'key': busEndpoint.reference});
         });
 
+        const mobileUpdateWarning = this.state.data.content.mobileUpdateWarning;
+        const mobileMessage = this.state.data.content.mobileMessage;
+
+        let msgTitle = '';
+        let msgContent = '';
+        if (mobileUpdateWarning.mostUpdatedVersion != THIS_APP_VERSION){
+          msgTitle = 'Hã?! Seu InfoBus parece estar desatualizado!';
+          msgContent = mobileUpdateWarning.warningForOutdatedUsers;
+        } else if (mobileMessage.isAnEmergency || (Math.floor(Math.random() * 10) < 3)){
+          msgTitle = mobileMessage.title;
+          msgContent = mobileMessage.body;
+        }
+
         return (
           <View style={styles.container}>
             <Text style={styles.title}>
@@ -178,6 +191,8 @@ export class EndpointSelection extends Component {
                   <Text style={styles.liseparator}></Text>
                 } />
             </View>
+            <Text style={styles.subtitle}>{msgTitle}</Text>
+            <Text style={styles.body}>{msgContent}</Text>
           </View>
         );
 
