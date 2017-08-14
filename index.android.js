@@ -224,6 +224,7 @@ export class EndpointSchedules extends Component {
       if (busEndpoint.reference == selectedReference){
         // current UTC time
         const dtNow = new Date();
+        const today = dtNow.getUTCDay();
         let now = {
           hours: dtNow.getUTCHours(),
           minutes: dtNow.getUTCMinutes(),
@@ -247,13 +248,15 @@ export class EndpointSchedules extends Component {
             let h = departure.time.substring(0, 2);
             let m = departure.time.substring(3, 5);
             if ((h > now.hours) || (h == now.hours && m >= now.minutes)){
-              suggestions.push({
-                key: bus.line,
-                last: !i ? null : departures[i-1].time,
-                next1: departure.time,
-                next2: i == departures.length-1 ? null : departures[i+1].time,
-              });
-              return true;
+              if (bus.days.split('').some((day) => { return (day == today); })){
+                suggestions.push({
+                  key: bus.line,
+                  last: !i ? null : departures[i-1].time,
+                  next1: departure.time,
+                  next2: i == departures.length-1 ? null : departures[i+1].time,
+                });
+                return true;
+              }
             } else{
               return false;
             }
@@ -278,8 +281,8 @@ export class EndpointSchedules extends Component {
   render(){
     let hiddenBusMsg = '';
     if (this.state.hasHiddenBusSuggestions){
-      hiddenBusMsg = 'Alguns ônibus foram ocultos da lista por não terem mais horário agendados hoje.';
-      hiddenBusMsg += ' Isso ocorre em fins de noite, períodos de férias e alguns feriados.';
+      hiddenBusMsg = 'Um ou mais linhas foram ocultas da lista por não terem mais horário agendados hoje.';
+      hiddenBusMsg += ' Possíveis motivos: acabou a noite; não é dia letivo; ou é algum final de semana.';
     } else{
       if (Math.floor(Math.random() * 10) < 4){ // 40% of chance to show this tip
         hiddenBusMsg = '(Dica: meta uma dedada num horário pra ver quanto tempo falta.)';
@@ -297,9 +300,9 @@ export class EndpointSchedules extends Component {
         if (diff > 1){
           ToastAndroid.show('Faltam ' + diff + ' minutos pra dar ' + time + '.', ToastAndroid.SHORT);
         } else if (diff > -1){
-          ToastAndroid.show('Se o de ' + time + ' não tá saindo agora, então já foi embora ou se atrasou.', ToastAndroid.SHORT);
+          ToastAndroid.show('Esse de ' + time + ' já está saindo neste instante ou já foi embora (ou se atrasou).', ToastAndroid.SHORT);
         } else{
-          ToastAndroid.show('O de ' + time + ' deve(ria) ter saído há ' + diff + ' minutos.', ToastAndroid.SHORT);
+          ToastAndroid.show('Esse de ' + time + ' deve(ria) ter saído há ' + Math.abs(diff) + ' minutos.', ToastAndroid.SHORT);
         }
       }
     };
