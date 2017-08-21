@@ -28,7 +28,7 @@ And what I did to run my application on my device (didn't use a virtual device):
 What I imagine that should be done after you clone the repository (didn't test it yet):
 - Execute ```npm install``` on repository directory.
 
-> Everytime I'll run my aplication, I execute ```adb reverse tcp:8081 tcp:8081 && react-native run-android```
+> Everytime I wanna run my aplication, I execute ```adb reverse tcp:8081 tcp:8081 && react-native run-android```
 > at my repository root after plugging my device on USB port and allowing it to let my PC debug.
 > In another bash instance, I also run ```react-native log-android```.
 
@@ -46,6 +46,7 @@ A few people contributed somehow to this project:
 - Yuri H. Sales ([@yuriscosta](https://github.com/yuriscosta)) for helping to assemble data and suggesting the 'InfoBus' name
 - Davi Carvalho ([@davicfg](https://github.com/davicfg)) for giving me the data source
 - Robson Costa (from e-mail) for giving me another data source
+- Secretaria Municipal de Mobilidade Urbana ([STTU](http://www.natal.rn.gov.br/sttu/)) for always providing a good data source and also making sure those schedules are being followed
 
 Other people gave me ideas and feedback for upgrades since Terminal 588:
 
