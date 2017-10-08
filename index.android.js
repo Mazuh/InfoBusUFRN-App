@@ -302,21 +302,18 @@ export class EndpointSchedules extends Component {
 
     const showTimeDiff = (time) => {
       const dtNow = new Date();
-      const nowMinutes = dtNow.getUTCHours()*60 + dtNow.getUTCMinutes() - 180;
-      if (nowMinutes < 0){
-        ToastAndroid.show('Foi mal, tá muito cedo pra calcular isso ainda...', ToastAndroid.SHORT);
-      } else{
-        const timeMinutes = Number(time.substring(0, 2))*60 + Number(time.substring(3, 5));
-        const diff = timeMinutes - nowMinutes;
-        if (diff > 1){
+      const nowMinutes = Math.abs(dtNow.getUTCHours() * 60 + dtNow.getUTCMinutes() - 180);
+      
+      const timeMinutes = Number(time.substring(0, 2)) * 60 + Number(time.substring(3, 5));
+      const diff = timeMinutes - nowMinutes;
+      if (diff > 1) {
           ToastAndroid.show('Faltam ' + diff + ' minutos pra dar ' + time + '.', ToastAndroid.SHORT);
-        } else if (diff >= -1){
+      } else if (diff >= -1) {
           ToastAndroid.show('Esse de ' + time + ' deve(ria) estar saindo AGORA ou já se foi.', ToastAndroid.SHORT);
-        } else{
+      } else {        
           ToastAndroid.show('Esse de ' + time + ' deve(ria) ter saído há ' + Math.abs(diff) + ' minutos.', ToastAndroid.SHORT);
-        }
       }
-    };
+  };
 
     return (
       <View style={styles.container}>
