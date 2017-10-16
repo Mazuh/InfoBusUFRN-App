@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
   Text,
+  Button,
   Image,
   TouchableHighlight,
   FlatList,
@@ -162,12 +163,51 @@ export class EndpointSelection extends Component {
         let msgTitle = '';
         let msgContent = '';
         if (mobileUpdateWarning.mostUpdatedVersion != THIS_APP_VERSION){
-          msgTitle = 'Hã?! Seu InfoBus parece estar desatualizado!';
+          msgTitle = 'Hã?! Seu InfoBus app parece estar desatualizado!';
           msgContent = mobileUpdateWarning.warningForOutdatedUsers;
         } else if (mobileMessage.isAnEmergency || (Math.floor(Math.random() * 10) < 3)){
           msgTitle = mobileMessage.title;
           msgContent = mobileMessage.body;
         }
+
+        const titleBtnFreeForDST = undefined;
+        if (this.state.hourCorrection != undefined && this.state.hourCorrection == 0){
+            titleBtnFreeForDST = ">> Não. Deixe normal. <<"
+        } else{
+            titleBtnFreeForDST = "Não. Deixe normal."
+        }
+        const setFreeForDST = () => {
+          this.setState((state) => {
+            state.hourCorrection = 0;
+            return state;
+          });
+        };
+
+        const titleBtnAheadForDST = undefined;
+        if (this.state.hourCorrection != undefined && this.state.hourCorrection == 1){
+            titleBtnAheadForDST = ">> Sim. Adiante em 1h. <<"
+        } else{
+            titleBtnAheadForDST = "Sim. Adiante em 1h."
+        }
+        const setAheadForDST = () => {
+          this.setState((state) => {
+            state.hourCorrection = +1;
+            return state;
+          });
+        };
+
+        const titleBtnDelayForDST = undefined;
+        if (this.state.hourCorrection != undefined && this.state.hourCorrection == -1){
+            titleBtnDelayForDST = ">> Sim. Atrase em 1h. <<"
+        } else{
+            titleBtnDelayForDST = "Sim. Atrase em 1h."
+        }
+        const setDelayForDST = () => {
+          this.setState((state) => {
+            state.hourCorrection = -1;
+            return state;
+          });
+        };
 
         return (
           <View style={styles.container}>
@@ -187,6 +227,7 @@ export class EndpointSelection extends Component {
                         {
                           selectedReference: item.key,
                           busEndpoints: busEndpoints,
+                          hourCorrection: this.state.hourCorrection,
                         }
                       )
                     }}>
@@ -197,8 +238,30 @@ export class EndpointSelection extends Component {
                   <Text style={styles.liseparator}></Text>
                 } />
 
+              <Text style={styles.subtitle}></Text>
+              <Text style={styles.body}>O InfoBus bugou com o horário de verão?</Text>
 
-              <Text style={styles.subtitle}>-----</Text>
+              <Button
+                onPress={setFreeForDST}
+                title={titleBtnFreeForDST}
+                color="#841584"
+                accessibilityLabel="Não. Apenas deixar o app como está."
+              />
+              <Button
+                onPress={setAheadForDST}
+                title={titleBtnAheadForDST}
+                color="#841584"
+                accessibilityLabel="Sim. Acrescentar 1h ao app."
+              />
+              <Button
+                onPress={setDelayForDST}
+                title={titleBtnDelayForDST}
+                color="#841584"
+                accessibilityLabel="Sim. Diminuir 1h do app."
+              />
+
+              <Text style={styles.subtitle}></Text>
+
               <Text style={styles.subtitle}>{msgTitle}</Text>
               <Text style={styles.body}>{msgContent}</Text>
 
@@ -235,6 +298,8 @@ export class EndpointSchedules extends Component {
 
     const selectedReference = this.props.navigation.state.params.selectedReference;
     const busEndpoints = this.props.navigation.state.params.busEndpoints;
+    const hourCorrection = this.props.navigation.state.params.hourCorrection == undefined
+                           ? 0 : this.props.navigation.state.params.hourCorrection;
 
     busEndpoints.forEach((busEndpoint) => {
       if (busEndpoint.reference == selectedReference){
@@ -248,6 +313,7 @@ export class EndpointSchedules extends Component {
 
         // set a constant time zone for current time
         now.hours -= 3; // RN-Brazil
+        now.hours += hourCorrection; // DST?
         if (now.hours < 0){
           now.hours = 24 + now.hours;
         }
@@ -286,6 +352,7 @@ export class EndpointSchedules extends Component {
           localTime: nowStr,
           suggestions: suggestions,
           hasHiddenBusSuggestions: hasHiddenBusSuggestions,
+          hourCorrection: hourCorrection,
         };
       }
     });
@@ -308,6 +375,7 @@ export class EndpointSchedules extends Component {
     const showTimeDiff = (time) => {
       const dtNow = new Date();
       let nowMinutes = dtNow.getUTCHours() * 60 + dtNow.getUTCMinutes() - 180;
+      nowMinutes += this.state.hourCorrection * 60;
       if (nowMinutes < 0){
         nowMinutes += (24*60);
       }
@@ -400,8 +468,8 @@ export class About extends Component {
              repositório do GitHub: &lt;https://github.com/Mazuh/InfoBusUFRN-App/&gt;.
           </Text>
           <Text style={styles.body}>
-            Agradecimentos: Davi Carvalho (UFRN), Yuri Henrique Sales (IFRN),
-             e a todos que contribuiram com feedbacks e pedidos ao antigo
+            Agradecimentos: Yuri Henrique Sales (IFRN),
+             e a todos que contribuiram com feedbacks e pedidos desde antigo
              app Terminal 588.
           </Text>
         </ScrollView>
