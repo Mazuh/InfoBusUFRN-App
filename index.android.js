@@ -174,7 +174,7 @@ export class EndpointSelection extends Component {
             <Text style={styles.title}>
               Cadê tu?
             </Text>
-            <View style={styles.listcontainer}>
+            <ScrollView style={styles.listcontainer}>
               <FlatList
                 style={styles.list}
                 data={endpoints}
@@ -196,9 +196,14 @@ export class EndpointSelection extends Component {
                 ItemSeparatorComponent={() =>
                   <Text style={styles.liseparator}></Text>
                 } />
-            </View>
-            <Text style={styles.subtitle}>{msgTitle}</Text>
-            <Text style={styles.body}>{msgContent}</Text>
+
+
+              <Text style={styles.subtitle}>-----</Text>
+              <Text style={styles.subtitle}>{msgTitle}</Text>
+              <Text style={styles.body}>{msgContent}</Text>
+
+            </ScrollView>
+
           </View>
         );
 
@@ -293,7 +298,7 @@ export class EndpointSchedules extends Component {
     let hiddenBusMsg = '';
     if (this.state.hasHiddenBusSuggestions){
       hiddenBusMsg = 'Um ou mais linhas foram ocultas da lista por não terem mais horário agendados hoje.';
-      hiddenBusMsg += ' Possíveis motivos: acabou a noite; não é dia letivo; ou é algum final de semana.';
+      hiddenBusMsg += ' Possíveis motivos: ela já deu a última viagem; não é dia letivo; ou é algum final de semana.';
     } else{
       if (Math.floor(Math.random() * 10) < 4){ // 40% of chance to show this tip
         hiddenBusMsg = '(Dica: meta uma dedada num horário pra ver quanto tempo falta.)';
@@ -302,15 +307,20 @@ export class EndpointSchedules extends Component {
 
     const showTimeDiff = (time) => {
       const dtNow = new Date();
-      const nowMinutes = Math.abs(dtNow.getUTCHours() * 60 + dtNow.getUTCMinutes() - 180);
-      
+      let nowMinutes = dtNow.getUTCHours() * 60 + dtNow.getUTCMinutes() - 180;
+      if (nowMinutes < 0){
+        nowMinutes += (24*60);
+      }
+
       const timeMinutes = Number(time.substring(0, 2)) * 60 + Number(time.substring(3, 5));
+
       const diff = timeMinutes - nowMinutes;
+
       if (diff > 1) {
           ToastAndroid.show('Faltam ' + diff + ' minutos pra dar ' + time + '.', ToastAndroid.SHORT);
       } else if (diff >= -1) {
           ToastAndroid.show('Esse de ' + time + ' deve(ria) estar saindo AGORA ou já se foi.', ToastAndroid.SHORT);
-      } else {        
+      } else {
           ToastAndroid.show('Esse de ' + time + ' deve(ria) ter saído há ' + Math.abs(diff) + ' minutos.', ToastAndroid.SHORT);
       }
   };
@@ -404,7 +414,7 @@ export class About extends Component {
 
 const DATA_GIST_ENDPOINT = 'https://api.github.com/gists/e10c07f1abb580c143557d8ed8427bbd';
 const DATA_STORE_KEY = '@InfoBusUFRN:data';
-const THIS_APP_VERSION = '2.0.0';
+const THIS_APP_VERSION = '2.2.0';
 
 const InfoBusUFRN = StackNavigator({
   EndpointSelection: { screen: EndpointSelection },
