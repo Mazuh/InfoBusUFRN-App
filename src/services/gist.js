@@ -9,8 +9,8 @@ export const retrieveAllSchedules = async (url) => {
       references.push(element.reference);
     });
 
-    return references.join(', ');
+    return references;
   } catch (e) {
-    console.log(e);
+    throw(e);
   }
 }
