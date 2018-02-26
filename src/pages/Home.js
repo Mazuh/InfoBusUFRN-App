@@ -10,7 +10,6 @@ class Home extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(actions.fetchEndpointsReferences());
-    console.log('PROPS', this.props);
   }
 
   render() {
@@ -32,7 +31,6 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  console.log('STATE', state);
   return {
     endpointsReferences: state.endpoints.endpointsReferences
   };
