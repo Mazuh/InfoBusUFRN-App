@@ -1,16 +1,10 @@
 export const retrieveAllSchedules = async (url) => {
-  let references = [];
+  const references = [];
 
-  try {
-    let response = await fetch(url);
-    const data = await response.json();
+  const data = await (await fetch(url)).json();
+  data.content.busEndpoints.forEach(element => {
+    references.push(element.reference);
+  });
 
-    data.content.busEndpoints.forEach(element => {
-      references.push(element.reference);
-    });
-
-    return references;
-  } catch (e) {
-    throw(e);
-  }
+  return references;
 }

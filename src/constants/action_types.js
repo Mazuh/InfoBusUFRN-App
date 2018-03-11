@@ -1,0 +1,2 @@
+// Recipes
+export const SET_FOUND_ENDPOINTS_REFERENCES = 'SET_FOUND_ENDPOINTS';
