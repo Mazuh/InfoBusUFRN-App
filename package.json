@@ -1,6 +1,6 @@
 {
-  "name": "InfoBusUFRN-App",
-  "version": "0.1.0",
+  "name": "infobusufrn",
+  "version": "3.0.0",
   "private": true,
   "devDependencies": {
     "jest-expo": "25.0.0",

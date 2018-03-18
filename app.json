@@ -1,5 +1,9 @@
 {
   "expo": {
+    "name": "InfoBus UFRN",
+    "slug": "infobusufrn",
+    "privacy": "public",
+    "githubUrl": "https://github.com/Mazuh/InfoBusUFRN-App",
     "sdkVersion": "25.0.0"
   }
 }
