@@ -6,15 +6,31 @@ Quick reading of my university's bus departure times.
 
 > Open data source: https://gist.github.com/Mazuh/e10c07f1abb580c143557d8ed8427bbd
 
-## Available Scripts
+## Setting up
 
-Bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
+Make sure you have an updated `yarn` and using `node 6`.
+
+```sh
+yarn install
+```
+
+This project was bootstrapped with
+[Create React Native App](https://github.com/react-community/create-react-native-app),
+so it has a few nice scripts.
 
 ### `yarn start`
 
 Runs the app in development mode. Use the [Expo app](https://expo.io) on your phone to view it.
 
-Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `--reset-cache` flag to the start script:
+You'll probably get an error message suggesting you to run the following snippet:
+
+```sh
+sudo sysctl -w fs.inotify.max_user_instances=1024 && \
+sudo sysctl -w fs.inotify.max_user_watches=12288
+```
+
+And sometimes you may need to reset or clear the React Native packager's cache.
+To do so, you can pass the `--reset-cache` flag to the start script:
 
 ```sh
 yarn start -- --reset-cache
