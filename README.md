@@ -8,7 +8,9 @@ Quick reading of my university's bus departure times.
 
 ## Setting up
 
-Make sure you have an updated `yarn` and using `node 6`.
+Clone this repository and change directory to it.
+Make sure you have an updated `yarn` and using Node 6 (or above, I guess).
+Then run:
 
 ```sh
 yarn install
@@ -16,7 +18,7 @@ yarn install
 
 This project was bootstrapped with
 [Create React Native App](https://github.com/react-community/create-react-native-app),
-so it has a few nice scripts.
+so it came with a few nice scripts.
 
 ### `yarn start`
 
