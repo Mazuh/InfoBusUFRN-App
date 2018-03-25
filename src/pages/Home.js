@@ -2,14 +2,17 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import actions from '../actions';
+import { allEndpointsReferences } from '../lib/gist_data_parser';
+import { DATA_GIST_ENDPOINT } from '../constants/gist';
+import { retrieveFullDataObject } from '../services/gist';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
-    this.props.dispatch(actions.fetchEndpointsReferences());
+    retrieveFullDataObject().then((gistObj) => {
+      const { dispatch } = this.props;
+      const { setEndpointsReferences } = actions;
+      dispatch(setEndpointsReferences(allEndpointsReferences(gistObj)));
+    });
   }
 
   render() {

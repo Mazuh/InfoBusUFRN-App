@@ -1,10 +1,7 @@
-export const retrieveAllSchedules = async (url) => {
-  const references = [];
+import { DATA_GIST_ENDPOINT } from '../constants/gist';
 
-  const data = await (await fetch(url)).json();
-  data.content.busEndpoints.forEach(element => {
-    references.push(element.reference);
-  });
-
-  return references;
-}
+export const retrieveFullDataObject = (webEndpoint) => (
+  fetch(webEndpoint || DATA_GIST_ENDPOINT).then(
+    (fetchedData) => fetchedData.json()
+  ).catch((e) => console.log(e))
+);

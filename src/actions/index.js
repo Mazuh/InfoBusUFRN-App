@@ -1,4 +1,4 @@
-import * as endpointsActions from './endpoints';
+import * as endpointsActions from './bus_endpoints';
 
 export const actions = Object.assign({},
   endpointsActions
