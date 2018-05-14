@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
+
 import actions from '../actions';
 import { allEndpointsReferences } from '../lib/gist_data_parser';
 import { DATA_GIST_ENDPOINT } from '../constants/gist';
