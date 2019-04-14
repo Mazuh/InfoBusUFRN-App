@@ -25,7 +25,7 @@ Your console will show instructions of how open the app on an emulated device or
 ## License
 
     InfoBus UFRN
-    Copyright (C) 2017 Marcell "Mazuh" Guilherme Costa da Silva
+    Copyright (C) 2017~2019 Marcell "Mazuh" Guilherme Costa da Silva
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
