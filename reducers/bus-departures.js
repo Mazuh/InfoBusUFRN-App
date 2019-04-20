@@ -1,14 +1,25 @@
 const initialState = {
   isFetching: false,
-  departures: [],
+  busEndpoints: [],
+  supportedAppVersions: [],
+  appMessage: {},
+  appUpdateWarning: {},
 };
 
 export default function(state = initialState, { type, payload }) {
   switch (type) {
-    case 'START_FETCHING_DEPARTURES':
-      return { ...state, isFetching: true, };
-    case 'SET_FETCHED_DEPARTURES':
-      return { ...state, isFetching: false, departures: payload };
+    case '@DEPARTURES/START_FETCHING':
+      return { ...state, isFetching: true, error: false };
+    case '@DEPARTURES/SET_FAILED':
+      return { ...state, isFetching: false, error: payload || true };
+    case '@DEPARTURES/SET_FETCHED':
+      return {
+        ...state,
+        isFetching: false,
+        error: false,
+        busEndpoints: payload.busEndpoints,
+
+      };
     default:
       return state;
   }

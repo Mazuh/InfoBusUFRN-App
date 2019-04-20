@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   ScrollView,
@@ -6,19 +7,27 @@ import {
   Text,
   View,
 } from 'react-native';
+import { fetchDepartures } from '../actions/bus-departures';
+import BusEndpointSelector from '../components/BusEndpointSelector';
 
-export class HomeScreen extends React.Component {
+export class HomeScreen extends React.PureComponent {
   static navigationOptions = {
     header: null,
   };
+
+  constructor(props) {
+    super(props);
+
+    this.props.fetchDepartures();
+  }
 
   render() {
     return (
       <View>
         <ScrollView>
           <View>
-            <Text>Hello world!</Text>
-            <Text>{JSON.stringify(this.props)}</Text>
+            <Text>InfoBus UFRN App</Text>
+            <BusEndpointSelector/>
           </View>
         </ScrollView>
       </View>
@@ -30,6 +39,8 @@ const styles = StyleSheet.create({
   // todo
 });
 
-const mapStateToProps = state => ({ busDepartures: state });
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchDepartures,
+}, dispatch);
 
-export default connect(mapStateToProps)(HomeScreen);
+export default connect(null, mapDispatchToProps)(HomeScreen);
