@@ -8,16 +8,17 @@ Available on Google Play: https://play.google.com/store/apps/details?id=io.githu
 
 ## Setting up for development
 
-Having Node 10 or 11 installed, change directory to this project's root and install dependencies:
+Having Node 10 or 11 installed, change directory to this project's root and install dependencies
+(with `yarn`, so if you don't have it, then run `npm install -g yarn` for it):
 
 ```sh
-npm install
+yarn install
 ```
 
 Then run development Expo server:
 
 ```sh
-npm start
+yarn start
 ```
 
 Your console will show instructions of how open the app on an emulated device or your own existing one.

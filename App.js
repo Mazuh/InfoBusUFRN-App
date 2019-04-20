@@ -1,9 +1,11 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
+import globalState from './app-redux-store';
 import AppNavigator from './navigation/AppNavigator';
 
-export default class App extends React.Component {
+export class App extends React.Component {
   state = {
     isLoadingComplete: false,
   };
@@ -17,14 +19,14 @@ export default class App extends React.Component {
           onFinish={this._handleFinishLoading}
         />
       );
-    } else {
-      return (
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
-      );
     }
+
+    return (
+      <View style={styles.container}>
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        <AppNavigator />
+      </View>
+    );
   }
 
   _loadResourcesAsync = async () => {
@@ -60,3 +62,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default () => <Provider store={globalState}><App/></Provider>;
