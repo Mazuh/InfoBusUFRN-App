@@ -4,7 +4,7 @@ const initialState = {
   supportedAppVersions: [],
   appMessage: {},
   appUpdateWarning: {},
-  selectedReference: '',
+  selectedReference: null,
 };
 
 export default function(state = initialState, { type, payload }) {
@@ -22,11 +22,12 @@ export default function(state = initialState, { type, payload }) {
 
       };
     case '@DEPARTURES/SELECT_REFERENCE':
-      if (state.busEndpoints.find(it => it.reference === payload)) {
-        return { ...state, selectedReference: payload };
-      }
+      return {
+        ...state,
+        selectedReference: state.busEndpoints.find(it => it.reference === payload) || null,
+      };
     case '@DEPARTURES/UNSELECT_REFERENCE':
-      return { ...state, selectedReference: '' };
+      return { ...state, selectedReference: null };
     default:
       return state;
   }
