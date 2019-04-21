@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import {
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { fetchDepartures } from '../actions/bus-departures';
 import BusEndpointSelector from '../components/BusEndpointSelector';
+import { BLUE } from '../constants/colors';
 
 export class HomeScreen extends React.PureComponent {
   static navigationOptions = {
@@ -23,12 +23,9 @@ export class HomeScreen extends React.PureComponent {
 
   render() {
     return (
-      <View>
+      <View style={styles.screen}>
         <ScrollView>
-          <View>
-            <Text>InfoBus UFRN App</Text>
-            <BusEndpointSelector/>
-          </View>
+          <BusEndpointSelector/>
         </ScrollView>
       </View>
     );
@@ -36,7 +33,11 @@ export class HomeScreen extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  // todo
+  screen: {
+    flexGrow: 1,
+    paddingTop: 50,
+    backgroundColor: BLUE,
+  },
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -12,12 +12,17 @@ function parseGistResponse(response) {
   };
 }
 
-export function fetchDepartures() {
-  return (dispatch) => {
-    dispatch({ type: '@DEPARTURES/START_FETCHING' });
-    axios.get(DEPARTURES_DATA_GIST_URL)
-      .then(parseGistResponse)
-      .then(payload => dispatch({ type: '@DEPARTURES/SET_FETCHED', payload }))
-      .catch(error => dispatch({ type: '@DEPARTURES/SET_FAILED', payload: error }));
-  };
-}
+export const fetchDepartures = () => (dispatch) => {
+  dispatch({ type: '@DEPARTURES/START_FETCHING' });
+  axios.get(DEPARTURES_DATA_GIST_URL)
+    .then(parseGistResponse)
+    .then(payload => dispatch({ type: '@DEPARTURES/SET_FETCHED', payload }))
+    .catch(error => dispatch({ type: '@DEPARTURES/SET_FAILED', payload: error }));
+};
+
+export const selectReference = reference => ({
+  type: '@DEPARTURES/SELECT_REFERENCE',
+  payload: reference,
+});
+
+export const unselectReference = () => ({ type: '@DEPARTURES/UNSELECT_REFERENCE' });
